@@ -4,6 +4,7 @@ using Concert.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Concert.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220422232613_test2")]
+    partial class test2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +39,7 @@ namespace Concert.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Description")
+                    b.HasIndex("Id")
                         .IsUnique();
 
                     b.ToTable("Entrances");
@@ -59,6 +61,9 @@ namespace Concert.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<int>("EntranceId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -69,46 +74,23 @@ namespace Concert.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EntranceId");
+
                     b.HasIndex("Id")
                         .IsUnique();
 
                     b.ToTable("Tickets");
                 });
 
-            modelBuilder.Entity("Concert.Data.Entities.TicketEntrance", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("Entrance")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Ticket")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TicketId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TicketId");
-
-                    b.ToTable("TicketEntrance");
-                });
-
-            modelBuilder.Entity("Concert.Data.Entities.TicketEntrance", b =>
-                {
-                    b.HasOne("Concert.Data.Entities.Ticket", null)
-                        .WithMany("TicketEntrance")
-                        .HasForeignKey("TicketId");
-                });
-
             modelBuilder.Entity("Concert.Data.Entities.Ticket", b =>
                 {
-                    b.Navigation("TicketEntrance");
+                    b.HasOne("Concert.Data.Entities.Entrance", "Entrance")
+                        .WithMany()
+                        .HasForeignKey("EntranceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Entrance");
                 });
 #pragma warning restore 612, 618
         }

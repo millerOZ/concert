@@ -1,16 +1,16 @@
 using Concert.Data;
+using Concert.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DataContext>(o =>
 {
     o.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 builder.Services.AddTransient<SeedDb>();
-
+builder.Services.AddScoped<ICombosHelper, CombosHelper>();
 var app = builder.Build();
 seedData();
 void seedData()

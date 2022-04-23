@@ -13,11 +13,11 @@ namespace Concert.Data
         {
             await _context.Database.EnsureCreatedAsync();
             await CheckTicketsAsync();
+            await CheckEntrancesAsync();
         }
 
-        private async Task CheckTicketsAsync()
+        private async Task CheckEntrancesAsync()
         {
-
             List<string> auxEntrance = new List<string>()
             {
                 "Norte",
@@ -25,35 +25,39 @@ namespace Concert.Data
                 "Oriental",
                 "Occidental"
             };
+            if (!_context.Entrances.Any())
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    _context.Entrances.Add(new Entrance
+                    {
+                        Description = auxEntrance[i],
+                    });
+                      await _context.SaveChangesAsync();
+                }
+
+            }
+        }
+
+        private async Task CheckTicketsAsync()
+        {
+
+
             if (!_context.Tickets.Any())
             {
                 //var seed = Environment.TickCount;
                 //var random = new Random(seed);
-                //for (int i = 0; i < 10; i++)
-                //{
-                //    _context.Tickets.Add(new Ticket
-                //    {
-                //        WasUsed = false,
-                //        Entrances = new List<Entrance>()
-                //    {
-                //        new Entrance
-                //        {
-                //            Description = auxEntrance[random.Next(0, 4)],
-                //        }
-                //    }
-                //    });
-                //}
-                _context.Tickets.Add(new Ticket
+                for (int i = 0; i < 5; i++)
                 {
-                    WasUsed = false,
-                    Entrances = new List<Entrance>()
+                    _context.Tickets.Add(new Ticket
                     {
-                        new Entrance
-                        {
-                            Description = "Norte",
-                        }
-                    }
-                });
+                        WasUsed = false,
+                        Document = "1000" + i.ToString(),
+                        Name = "User" + i.ToString()
+                    });
+                    await _context.SaveChangesAsync();
+                }
+
             }
 
         }

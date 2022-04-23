@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Concert.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220422051034_InitialDb111")]
-    partial class InitialDb111
+    [Migration("20220422232330_test1")]
+    partial class test1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,14 +37,12 @@ namespace Concert.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("TicketId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("TicketId");
+                    b.HasIndex("Id")
+                        .IsUnique();
 
-                    b.ToTable("Entrance");
+                    b.ToTable("Entrances");
                 });
 
             modelBuilder.Entity("Concert.Data.Entities.Ticket", b =>
@@ -63,6 +61,9 @@ namespace Concert.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
+                    b.Property<int>("EntranceId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -73,22 +74,23 @@ namespace Concert.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("EntranceId");
+
                     b.HasIndex("Id")
                         .IsUnique();
 
                     b.ToTable("Tickets");
                 });
 
-            modelBuilder.Entity("Concert.Data.Entities.Entrance", b =>
-                {
-                    b.HasOne("Concert.Data.Entities.Ticket", null)
-                        .WithMany("Entrances")
-                        .HasForeignKey("TicketId");
-                });
-
             modelBuilder.Entity("Concert.Data.Entities.Ticket", b =>
                 {
-                    b.Navigation("Entrances");
+                    b.HasOne("Concert.Data.Entities.Entrance", "Entrance")
+                        .WithMany()
+                        .HasForeignKey("EntranceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Entrance");
                 });
 #pragma warning restore 612, 618
         }
