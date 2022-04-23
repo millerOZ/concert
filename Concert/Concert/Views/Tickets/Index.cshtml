@@ -1,12 +1,12 @@
 ﻿@model IEnumerable<Concert.Data.Entities.Ticket>
+
+
 @{
     ViewData["Title"] = "Index";
 }
+
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
 
-<p>
-    <a asp-action="Create" class="btn btn-outline-primary">Crear Nuevo</a>
-</p>
 <p>
     <a asp-action="ConsultIdTicket" class="btn btn-outline-primary">Consulta ID Boleta</a>
 </p>
@@ -15,7 +15,7 @@
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Tickets</h3>
+                <h3 class="panel-title">Boletas</h3>
             </div>
             <div class="panel-body">
                 <table class="table table-hover table-responsive table-striped" id="MyTable">
@@ -33,7 +33,7 @@
                             <th>
                                 @Html.DisplayNameFor(model => model.Date)
                             </th>
-
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,17 +41,17 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.WasUsed)
+                                @Html.DisplayFor(modelItem => item.WasUsed)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Document)
+                                @Html.DisplayFor(modelItem => item.Document)
                                 </td>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Name)
+                                @Html.DisplayFor(modelItem => item.Name)
                                 </td>
 
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.Date)
+                                @Html.DisplayFor(modelItem => item.Date)
                                 </td>
 
 

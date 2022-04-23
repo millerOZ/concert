@@ -21,64 +21,6 @@ namespace Concert.Controllers
             return View(await _context.Tickets.
                Include(e => e.TicketEntrance).ToListAsync());
         }
-
-        public async Task<IActionResult> Create()
-        {
-            TicketViewModel model = new()
-            {
-                Entrances = await _combosHelper.GetComboEntranceAsync(),
-            };
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(TicketViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                Ticket ticket = new()
-                {
-                    Name = model.Name,
-                    Document = model.Document,
-                    Date = DateTime.Now,
-                    WasUsed = true
-                };
-                ticket.TicketEntrance = new List<TicketEntrance>()
-                {
-                    new TicketEntrance
-                    {
-                        Entrance = await _context.Entrances.FindAsync(model.EntranceId),
-                    }
-                };
-
-                try
-                {
-                    _context.Add(model);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-
-                catch (DbUpdateException dbUpdateException)
-                {
-                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
-                    {
-                        ModelState.AddModelError(string.Empty, "Ya existe un ticket con el mismo Id de cliente.");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
-                    }
-                }
-                catch (Exception exception)
-                {
-                    ModelState.AddModelError(string.Empty, exception.Message);
-                }
-            }
-            model.Entrances = await _combosHelper.GetComboEntranceAsync();
-            return View(model);
-        }
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -122,15 +64,6 @@ namespace Concert.Controllers
                 ticket.Document = model.Document;
                 ticket.WasUsed = true;
                 ticket.Date = DateTime.Now;
-                //ticket.EntranceId = model.EntranceId;
-                //ticket.TicketEntrance = model.EntranceId
-                //ticket.TicketEntrance = new List<TicketEntrance>()
-                //{
-                //    new TicketEntrance
-                //    {
-                //        Entrance = await _context.Entrances.FindAsync(model.EntranceId),
-                //    }
-                //};
                 _context.Update(ticket);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
