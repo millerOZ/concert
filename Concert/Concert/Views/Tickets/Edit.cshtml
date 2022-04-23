@@ -1,4 +1,4 @@
-﻿@model Concert.Models.EditTicketViewModel
+﻿@model Concert.Models.TicketViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -13,7 +13,7 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-           
+
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -24,7 +24,13 @@
                 <input asp-for="Document" class="form-control" />
                 <span asp-validation-for="Document" class="text-danger"></span>
             </div>
-        
+
+            <div class="form-group">
+                <label asp-for="EntranceId" class="control-label"></label>
+                <select asp-for="EntranceId" asp-items="Model.Entrances" class="form-control"></select>
+                <span asp-validation-for="EntranceId" class="text-danger"></span>
+            </div>
+
             <div class="form-group mt-2">
                 <input type="submit" value="Guardar" class="btn btn-outline-primary" />
                 <a asp-action="Index" class="btn btn-outline-success">Volver</a>

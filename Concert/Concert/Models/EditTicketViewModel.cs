@@ -15,5 +15,6 @@ namespace Concert.Models
         public string Name { get; set; }
         [Display(Name = "Fecha boleta usada")]
         public DateTime Date { get; set; }
+        public int EntranceId { get; set; }
     }
 }

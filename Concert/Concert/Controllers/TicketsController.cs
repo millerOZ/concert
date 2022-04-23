@@ -91,14 +91,16 @@ namespace Concert.Controllers
             {
                 return NotFound();
             }
-            EditTicketViewModel model = new()
+            TicketViewModel model = new()
             {
                 Id = ticket.Id,
                 Name = ticket.Name,
                 Document = ticket.Document,
                 WasUsed = true,
                 Date = DateTime.Now,
+                Entrances = await _combosHelper.GetComboEntranceAsync(),
             };
+
 
             return View(model);
         }
@@ -120,6 +122,15 @@ namespace Concert.Controllers
                 ticket.Document = model.Document;
                 ticket.WasUsed = true;
                 ticket.Date = DateTime.Now;
+                //ticket.EntranceId = model.EntranceId;
+                //ticket.TicketEntrance = model.EntranceId
+                //ticket.TicketEntrance = new List<TicketEntrance>()
+                //{
+                //    new TicketEntrance
+                //    {
+                //        Entrance = await _context.Entrances.FindAsync(model.EntranceId),
+                //    }
+                //};
                 _context.Update(ticket);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
