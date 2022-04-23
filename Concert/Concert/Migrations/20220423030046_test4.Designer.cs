@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Concert.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220423000922_test3")]
-    partial class test3
+    [Migration("20220423030046_test4")]
+    partial class test4
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

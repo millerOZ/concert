@@ -33,7 +33,7 @@ namespace Concert.Data
                     {
                         Description = auxEntrance[i],
                     });
-                      await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
                 }
 
             }
@@ -45,15 +45,13 @@ namespace Concert.Data
 
             if (!_context.Tickets.Any())
             {
-                //var seed = Environment.TickCount;
-                //var random = new Random(seed);
                 for (int i = 0; i < 5; i++)
                 {
                     _context.Tickets.Add(new Ticket
                     {
                         WasUsed = false,
-                        Document = "1000" + i.ToString(),
-                        Name = "User" + i.ToString()
+                        Document = "10" + i.ToString(),
+                        Name = "XXX"
                     });
                     await _context.SaveChangesAsync();
                 }

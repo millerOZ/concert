@@ -21,22 +21,7 @@ namespace Concert.Controllers
             return View(await _context.Tickets.
                Include(e => e.TicketEntrance).ToListAsync());
         }
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
 
-        //    var tickets = await _context.Tickets
-        //        .Include(r => r.Entrance)
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (tickets == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(tickets);
-        //}
         public async Task<IActionResult> Create()
         {
             TicketViewModel model = new()
@@ -58,7 +43,7 @@ namespace Concert.Controllers
                     Name = model.Name,
                     Document = model.Document,
                     Date = DateTime.Now,
-                    WasUsed = model.WasUsed
+                    WasUsed = true
                 };
                 ticket.TicketEntrance = new List<TicketEntrance>()
                 {
@@ -106,48 +91,62 @@ namespace Concert.Controllers
             {
                 return NotFound();
             }
-            return View(ticket);
+            EditTicketViewModel model = new()
+            {
+                Id = ticket.Id,
+                Name = ticket.Name,
+                Document = ticket.Document,
+                WasUsed = true,
+                Date = DateTime.Now,
+            };
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, TicketViewModel model)
         {
-            if (id != model.EntranceId)
+            if (id != model.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
-                {
-                    Ticket ticket = await _context.Tickets.FindAsync(model.EntranceId);
-                    ticket.WasUsed = model.WasUsed;
-                    ticket.Date = model.Date;
-                    _context.Update(ticket);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (DbUpdateException dbUpdateException)
-                {
-                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
-                    {
-                        ModelState.AddModelError(string.Empty, "Ya existe un boleto con el mismo ID.");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
-                    }
-                }
-                catch (Exception exception)
-                {
-                    ModelState.AddModelError(string.Empty, exception.Message);
-                }
+                Ticket ticket = await _context.Tickets.FindAsync(model.Id);
+                ticket.Name = model.Name;
+                ticket.Id = model.Id;
+                ticket.Document = model.Document;
+                ticket.WasUsed = true;
+                ticket.Date = DateTime.Now;
+                _context.Update(ticket);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            catch (DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                {
+                    ModelState.AddModelError(string.Empty, "Ya existe un boleto con el mismo ID.");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                }
+            }
+            catch (Exception exception)
+            {
+                ModelState.AddModelError(string.Empty, exception.Message);
+            }
+
             return View(model);
         }
 
+        public async Task<IActionResult> ConsultIdTicket(int? id)
+        {
+            Console.WriteLine(id);
+            return View();
+        }
     }
 }

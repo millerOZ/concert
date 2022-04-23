@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Concert.Migrations
 {
-    public partial class test : Migration
+    public partial class test5 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -31,30 +31,43 @@ namespace Concert.Migrations
                     WasUsed = table.Column<bool>(type: "bit", nullable: false),
                     Document = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    EntranceId = table.Column<int>(type: "int", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tickets", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TicketEntrance",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Ticket = table.Column<int>(type: "int", nullable: false),
+                    Entrance = table.Column<int>(type: "int", nullable: false),
+                    TicketId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TicketEntrance", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Tickets_Entrances_EntranceId",
-                        column: x => x.EntranceId,
-                        principalTable: "Entrances",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_TicketEntrance_Tickets_TicketId",
+                        column: x => x.TicketId,
+                        principalTable: "Tickets",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Entrances_Id",
+                name: "IX_Entrances_Description",
                 table: "Entrances",
-                column: "Id",
+                column: "Description",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tickets_EntranceId",
-                table: "Tickets",
-                column: "EntranceId");
+                name: "IX_TicketEntrance_TicketId",
+                table: "TicketEntrance",
+                column: "TicketId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_Id",
@@ -66,10 +79,13 @@ namespace Concert.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Tickets");
+                name: "Entrances");
 
             migrationBuilder.DropTable(
-                name: "Entrances");
+                name: "TicketEntrance");
+
+            migrationBuilder.DropTable(
+                name: "Tickets");
         }
     }
 }
